@@ -8,45 +8,7 @@
     <link href="/2022/03/12/redis_string/"/>
     <url>/2022/03/12/redis_string/</url>
     
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>yochiu &amp; flora</title>
-    <link href="/2022/03/11/test/"/>
-    <url>/2022/03/11/test/</url>
-    
-    <content type="html"><![CDATA[<p>miss you</p><img src="/2022/03/11/test/miss.jpg" class="" title="one">]]></content>
-    
-    
-    <categories>
-      
-      <category>Java</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>原创</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/2022/03/11/hello-world/"/>
-    <url>/2022/03/11/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="Redis字符串数据结构"><a href="#Redis字符串数据结构" class="headerlink" title="Redis字符串数据结构"></a>Redis字符串数据结构</h1><blockquote><p>Redis字符串使用了RedisObject跟SDS的数据结构来保存数据. </p></blockquote><h3 id="Redis-key-value数据结构"><a href="#Redis-key-value数据结构" class="headerlink" title="Redis key_value数据结构"></a>Redis key_value数据结构</h3><p>Redis使用了全局哈希表来保存所有键值对.  哈希表的每一项是一个 dictEntry 的结构体，用来指向一个键值对.<br>dictEntry 结构中有三个 8 字节的指针, 分别指向 key、value 以及下一个 dictEntry，三个指针共 24 字节.</p><img src="../redis_string/1.webp" width="55%" height="55%" /><p>jemalloc 在分配内存时，会根据我们申请的字节数 N，找一个比 N 大，但是最接近 N 的 2 的幂次数作为分配的空间，这样可以减少频繁分配的次数。</p><h3 id="Redis-SDS数据结构"><a href="#Redis-SDS数据结构" class="headerlink" title="Redis SDS数据结构"></a>Redis SDS数据结构</h3><p>当数据类型包含字符串时,   Redis会使用SDS数据结构来存储这些数据.<br>SDS数据结构有以下三个字段</p><ul><li>buf: 字节数据,  保存实际数据.  Redis会在最后数组最后加一个”\0””,  会占用一个字节</li><li>len: 表示buf已用长度,  占用四个字节</li><li>alloc: 占个 4 字节，表示 buf 的实际分配长度，一般大于 len</li></ul><img src="../redis_string/2.webp" width="55%" height="55%" /><h3 id="RedisObject数据结构"><a href="#RedisObject数据结构" class="headerlink" title="RedisObject数据结构"></a>RedisObject数据结构</h3><blockquote><p>Redis的数据类型很多,  不同的数据类型都有些元数据需要记录. Redis会使用RedisObject结构体来统一记录这些元数据,  同时指向实际数据</p></blockquote><p>一个 RedisObject 包含了 8 字节的元数据和一个 8 字节指针，这个指针再进一步指向具体数据类型的实际数据所在.</p><img src="../redis_string/3.webp" width="55%" height="55%" /><h3 id="RedisObject编码格式"><a href="#RedisObject编码格式" class="headerlink" title="RedisObject编码格式"></a>RedisObject编码格式</h3><ul><li>int编码.   保存的是 Long 类型整数时，RedisObject 中的指针就直接赋值为整数数据了，这样就不用额外的指针再指向整数</li><li>embstr编码.  保存的是字符串数据，并且字符串小于等于 44 字节时，RedisObject 中的元数据、指针和 SDS 是一块连续的内存区域，这样就可以避免内存碎片</li><li>raw编码.  当字符串大于 44 字节时，SDS 的数据量就开始变多了.   会使用指针指向SDS结构</li></ul><img src="../redis_string/4.webp" width="55%" height="55%" />]]></content>
     
     
     

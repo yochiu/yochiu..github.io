@@ -16,25 +16,20 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Redis字符串数据结构 Redis字符串使用了RedisObject跟SDS的数据结构来保存数据.   Redis key_value数据结构Redis使用了全局哈希表来保存所有键值对.  哈希表的每一项是一个 dictEntry 的结构体，用来指向一个键值对.dictEntry 结构中有三个 8 字节的指针, 分别指向 key、value 以及下一个 dictEntry，三个指针共 24 字节">
+    <meta name="description" content="maven跟java版本不匹配 周末上线服务的时候,   遇到了maven https问题.   查看服务器系统版本,  发现系统maven版本使用的是3.2.2版本.  老版本不支持https,  于是升级maven版本成3.6.3.  对项目进行手动编译(mvn clean compile),   发现报错信息:  Fatal error compiling: invalid target r">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis字符串数据结构">
-<meta property="og:url" content="http://example.com/2022/03/12/redis_string/index.html">
+<meta property="og:title" content="maven跟java版本不匹配">
+<meta property="og:url" content="http://example.com/2022/03/14/maven_java/index.html">
 <meta property="og:site_name" content="yochiu">
-<meta property="og:description" content="Redis字符串数据结构 Redis字符串使用了RedisObject跟SDS的数据结构来保存数据.   Redis key_value数据结构Redis使用了全局哈希表来保存所有键值对.  哈希表的每一项是一个 dictEntry 的结构体，用来指向一个键值对.dictEntry 结构中有三个 8 字节的指针, 分别指向 key、value 以及下一个 dictEntry，三个指针共 24 字节">
+<meta property="og:description" content="maven跟java版本不匹配 周末上线服务的时候,   遇到了maven https问题.   查看服务器系统版本,  发现系统maven版本使用的是3.2.2版本.  老版本不支持https,  于是升级maven版本成3.6.3.  对项目进行手动编译(mvn clean compile),   发现报错信息:  Fatal error compiling: invalid target r">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/12/redis_string/1.webp">
-<meta property="og:image" content="http://example.com/2022/03/12/redis_string/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/12/redis_string/3.webp">
-<meta property="og:image" content="http://example.com/2022/03/12/redis_string/4.webp">
-<meta property="article:published_time" content="2022-03-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-13T09:19:09.386Z">
+<meta property="article:published_time" content="2022-03-14T06:50:00.000Z">
+<meta property="article:modified_time" content="2022-03-14T06:51:11.286Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/03/12/redis_string/1.webp">
   
   
-  <title>Redis字符串数据结构 - yochiu</title>
+  <title>maven跟java版本不匹配 - yochiu</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -180,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Redis字符串数据结构">
+            <span class="h2" id="subtitle" title="maven跟java版本不匹配">
               
             </span>
 
@@ -190,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-12 00:00" pubdate>
-        2022年3月12日 凌晨
+      <time datetime="2022-03-14 14:50" pubdate>
+        2022年3月14日 下午
       </time>
     </span>
   
@@ -201,7 +196,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      753 字
+      1.4k 字
     </span>
   
 
@@ -210,7 +205,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7 分钟
+      12 分钟
     </span>
   
 
@@ -239,39 +234,23 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Redis字符串数据结构</h1>
+            <h1 style="display: none">maven跟java版本不匹配</h1>
             
             <div class="markdown-body">
-              <h1 id="Redis字符串数据结构"><a href="#Redis字符串数据结构" class="headerlink" title="Redis字符串数据结构"></a>Redis字符串数据结构</h1><blockquote>
-<p>Redis字符串使用了RedisObject跟SDS的数据结构来保存数据. </p>
+              <h1 id="maven跟java版本不匹配"><a href="#maven跟java版本不匹配" class="headerlink" title="maven跟java版本不匹配"></a>maven跟java版本不匹配</h1><blockquote>
+<p>周末上线服务的时候,   遇到了maven https问题.   查看服务器系统版本,  发现系统maven版本使用的是3.2.2版本.  老版本不支持https,  于是升级maven版本成3.6.3.  对项目进行手动编译(mvn clean compile),   发现报错信息:  Fatal error compiling: invalid target release: 1.8</p>
 </blockquote>
-<h3 id="Redis-key-value数据结构"><a href="#Redis-key-value数据结构" class="headerlink" title="Redis key_value数据结构"></a>Redis key_value数据结构</h3><p>Redis使用了全局哈希表来保存所有键值对.  哈希表的每一项是一个 dictEntry 的结构体，用来指向一个键值对.<br>dictEntry 结构中有三个 8 字节的指针, 分别指向 key、value 以及下一个 dictEntry，三个指针共 24 字节.</p>
-<img src="../redis_string/1.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
-<p>jemalloc 在分配内存时，会根据我们申请的字节数 N，找一个比 N 大，但是最接近 N 的 2 的幂次数作为分配的空间，这样可以减少频繁分配的次数。</p>
-<h3 id="Redis-SDS数据结构"><a href="#Redis-SDS数据结构" class="headerlink" title="Redis SDS数据结构"></a>Redis SDS数据结构</h3><p>当数据类型包含字符串时,   Redis会使用SDS数据结构来存储这些数据.<br>SDS数据结构有以下三个字段</p>
+<p>查看网上信息,   说的是服务使用的java 版本不对.   项目里指定了使用了1.8的JDK版本.<br>查看服务器上,  使用的是java1.7版本.<br>当时,  这台服务上也部署了其他进程,   当时也郁闷,   部门里统一使用的JDK版本都是1.8.<br>为啥其他服务就没有这个问题.<br>又由于当时着急部署服务,   没敢花太多时间追查问题,   就将服务器1.7的JDK升级成了1.8<br>后续部署服务就成功了</p>
 <ul>
-<li>buf: 字节数据,  保存实际数据.  Redis会在最后数组最后加一个”\0””,  会占用一个字节</li>
-<li>len: 表示buf已用长度,  占用四个字节</li>
-<li>alloc: 占个 4 字节，表示 buf 的实际分配长度，一般大于 len</li>
+<li>事后想了想,  这样的操作比较危险,   就将这样的问题反馈给了部门负责人,  担心会影响到其他服务,  也将其他进程一一重启.    后续虽然没啥问题,  但现在回想起来还是有点蛮撞</li>
+<li>后续也对项目进行了问题排查.   为啥其他进程部署没啥问题,   而这个服务部署却有问题</li>
 </ul>
-<img src="../redis_string/2.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+<p>查看项目, 项目里使用了maven-compiler-plugin插件<br>查看网上关于maven-compiler-plugin插件的详解.<br>maven是个项目管理工具,   如果不告诉代码要使用什么样的版本号,  会默认使用maven-compile-plugin插件指定的版本号.  项目里已经指定了JDK1.8的版本号</p>
+<p>查看机器当时的maven使用的版本号为1.7,    使用了版本号对不上的问题.  这就是当时报错的问题</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><pre><code class="hljs dust"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span></span><br><span class="language-xml">   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="language-xml">   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="language-xml">   <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.5.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="language-xml">   <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span></span><br><span class="language-xml">         <span class="hljs-tag">&lt;<span class="hljs-name">source</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;java.version&#125;</span><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">source</span>&gt;</span></span><br><span class="language-xml">         <span class="hljs-tag">&lt;<span class="hljs-name">target</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;java.version&#125;</span><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span></span><br><span class="language-xml">         <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;project.build.sourceEncoding&#125;</span><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">encoding</span>&gt;</span></span><br><span class="language-xml">   <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></span><br><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>         </span><br></code></pre></td></tr></table></figure>
 
-
-
-<h3 id="RedisObject数据结构"><a href="#RedisObject数据结构" class="headerlink" title="RedisObject数据结构"></a>RedisObject数据结构</h3><blockquote>
-<p>Redis的数据类型很多,  不同的数据类型都有些元数据需要记录. Redis会使用RedisObject结构体来统一记录这些元数据,  同时指向实际数据</p>
-</blockquote>
-<p>一个 RedisObject 包含了 8 字节的元数据和一个 8 字节指针，这个指针再进一步指向具体数据类型的实际数据所在.</p>
-<img src="../redis_string/3.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
-
-<h3 id="RedisObject编码格式"><a href="#RedisObject编码格式" class="headerlink" title="RedisObject编码格式"></a>RedisObject编码格式</h3><ul>
-<li>int编码.   保存的是 Long 类型整数时，RedisObject 中的指针就直接赋值为整数数据了，这样就不用额外的指针再指向整数</li>
-<li>embstr编码.  保存的是字符串数据，并且字符串小于等于 44 字节时，RedisObject 中的元数据、指针和 SDS 是一块连续的内存区域，这样就可以避免内存碎片</li>
-<li>raw编码.  当字符串大于 44 字节时，SDS 的数据量就开始变多了.   会使用指针指向SDS结构</li>
-</ul>
-<img src="../redis_string/4.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+<p>那为啥其他服务部署没有问题呢,   查看部署脚本.<br>发现部署脚本将jdk1.8配置进入环境变量.   maven编译打包的时候,   使用的是就是jdk1.8版本.<br>而自己手动编译项目时,  maven使用的是jdk1.7的版本.  这就是为啥手动编译出现了问题</p>
+ <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"> <span class="hljs-built_in">export</span> <span class="hljs-attribute">JAVA_HOME</span>=/usr/local/jdk1.8.0_161<br><span class="hljs-built_in">export</span> <span class="hljs-attribute">JRE_HOME</span>=<span class="hljs-variable">$JAVA_HOME</span>/jre<br><span class="hljs-built_in">export</span> <span class="hljs-attribute">CLASSPATH</span>=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar<br><span class="hljs-built_in">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$JAVA_HOME</span>/bin:$PATH<br></code></pre></td></tr></table></figure>
 
 
             </div>
@@ -293,15 +272,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/14/maven_java/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">maven跟java版本不匹配</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022/03/12/redis_string/">
+                        <span class="hidden-mobile">Redis字符串数据结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

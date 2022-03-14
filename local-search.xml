@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Redis集合统计模式</title>
+    <link href="/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Redis集合统计模式"><a href="#Redis集合统计模式" class="headerlink" title="Redis集合统计模式"></a>Redis集合统计模式</h1><blockquote><p>Redis集合类型常见的统计模式有四种,  分别是聚合统计, 排序统计,  二值状态统计,  基数统计</p></blockquote><h3 id="聚合统计"><a href="#聚合统计" class="headerlink" title="聚合统计"></a>聚合统计</h3><p>聚合统计，就是指统计多个集合元素的聚合结果，包括：统计多个集合的共有元素（交集统计）；把两个集合相比，统计其中一个集合独有的元素（差集统计）；统计多个集合的所有元素<br>比较常见的例子是统计网站新增的用户数,   每天的留存用户数<br>使用一个集合记录所有登陆过的用户.  Set类型,  key值为:  user:id<br>对于每天登陆的用户,  也使用Set类型记录,  key值形式为:  user:id:20220314<br>新增用户:  SDIFFSTORE  user:new user:id:20220314 user:id<br>留存用户: SINTERSTORE user:id:rem user:id:20220314 user:id:20220313</p><h3 id="排序统计"><a href="#排序统计" class="headerlink" title="排序统计"></a>排序统计</h3><p>比较经典的例子是网站的评论数<br>redis中有序的数据结构有List,  Sort Set<br>使用List会导致相同位置上的元素发生变动<br>Sorted Set 就不存在这个问题，因为它是根据元素的实际权重来排序和获取数据的<br>可以从评论时间的先后给每条评论设置一个权重值,  保存在Sort Set中</p><h3 id="二值状态统计"><a href="#二值状态统计" class="headerlink" title="二值状态统计"></a>二值状态统计</h3><p>这里的二值状态就是指集合元素的取值就只有 0 和 1 两种。<br>比较经典的应用场景是打卡场景,  记录签到（1）或未签到（0）<br>Redis提供了一个扩展的数据类型Bitmap,  可以按照偏移值offset对bit数组的某一个 bit 位进行读和写.<br>记录签到:  setbit  key  offset 1<br>检测是否签到:  getbit key  offset<br>统计签到:  bitcount key </p><h3 id="基数统计"><a href="#基数统计" class="headerlink" title="基数统计"></a>基数统计</h3><p>基数统计就是指统计一个集合中不重复的元素个数<br>统计网页的UV时,  就需要用到基数统计<br>基数统计在Redis里可以使用Set或者Hash的数据结构<br>但数据很多时,  Set跟Hash会占用比较大的数据结构<br>HyperLogLog 是一种用于统计基数的数据集合类型，它的最大优势就在于，当集合元素数量非常多时，它计算基数所需的空间总是固定的，而且还很小<br>每个 HyperLogLog 只需要花费 12 KB 内存，就可以计算接近 2^64 个元素的基数<br>HyperLogLog 的统计规则是基于概率完成的，所以它给出的统计结果是有一定误差的</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>maven跟java版本不匹配</title>
     <link href="/2022/03/14/maven_java/"/>
     <url>/2022/03/14/maven_java/</url>

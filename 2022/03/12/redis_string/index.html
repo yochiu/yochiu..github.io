@@ -26,9 +26,10 @@
 <meta property="og:image" content="http://example.com/2022/03/12/redis_string/1.webp">
 <meta property="og:image" content="http://example.com/2022/03/12/redis_string/2.webp">
 <meta property="og:image" content="http://example.com/2022/03/12/redis_string/3.webp">
+<meta property="og:image" content="http://example.com/2022/03/12/redis_string/5.webp">
 <meta property="og:image" content="http://example.com/2022/03/12/redis_string/4.webp">
 <meta property="article:published_time" content="2022-03-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-13T09:19:09.386Z">
+<meta property="article:modified_time" content="2022-03-15T15:00:45.487Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2022/03/12/redis_string/1.webp">
@@ -201,7 +202,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      753 字
+      970 字
     </span>
   
 
@@ -210,7 +211,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7 分钟
+      9 分钟
     </span>
   
 
@@ -263,7 +264,16 @@
 <p>Redis的数据类型很多,  不同的数据类型都有些元数据需要记录. Redis会使用RedisObject结构体来统一记录这些元数据,  同时指向实际数据</p>
 </blockquote>
 <p>一个 RedisObject 包含了 8 字节的元数据和一个 8 字节指针，这个指针再进一步指向具体数据类型的实际数据所在.</p>
+<p>一个 RedisObject 包含了 8 字节的元数据和一个 8 字节指针，这个指针再进一步指向具体数据类型的实际数据所在.<br>元数据包括了 type、encoding、lru 和 refcount 4 个元数据</p>
+<ul>
+<li>type: 表示数据类型</li>
+<li>encoding:  是值的编码方式，用来表示 Redis 中实现各个基本类型的底层数据结构，例如 SDS、压缩列表、哈希表、跳表等；</li>
+<li>lru: 记录了这个对象最后一次被访问的时间，用于淘汰过期的键值对</li>
+<li>refcount: 记录了对象的引用计数</li>
+</ul>
 <img src="../redis_string/3.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+
+<img src="../redis_string/5.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
 
 
 <h3 id="RedisObject编码格式"><a href="#RedisObject编码格式" class="headerlink" title="RedisObject编码格式"></a>RedisObject编码格式</h3><ul>

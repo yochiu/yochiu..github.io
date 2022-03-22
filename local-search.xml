@@ -4,6 +4,32 @@
   
   
   <entry>
+    <title>AOF</title>
+    <link href="/2022/03/22/AOF/"/>
+    <url>/2022/03/22/AOF/</url>
+    
+    <content type="html"><![CDATA[<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><blockquote><ul><li>数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志</li></ul></blockquote><h4 id="AOF记录的内容"><a href="#AOF记录的内容" class="headerlink" title="AOF记录的内容"></a>AOF记录的内容</h4><blockquote><ul><li>数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令</li><li>AOF日志内容有三个部分,   每部分都是由”$”+数字开头,  后面紧跟着具体的命令、键或值.</li><li>如下图所示,  这个 “*3”表示当前命令有三个部分，这里$表示有多少个字节</li></ul></blockquote><img src="../AOF/0.webp" width="55%" height="55%" /><h4 id="AOF三种策略"><a href="#AOF三种策略" class="headerlink" title="AOF三种策略"></a>AOF三种策略</h4><p>AOF一共有三种策略,  分别是no,  every sec,  always三种策略.</p><ul><li>No 操作系统控制的写回.  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，  由操作系统决定何时将缓冲区内容写回磁盘。</li><li>Everysec  每秒写回,  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘</li><li>Always  同步写回：每个写命令执行完，立马同步地将日志写回磁盘</li></ul><img src="../AOF/1.webp" width="55%" height="55%" /><p>日志写到内存缓冲区对应的是write操作,  日志写回到磁盘对应的是fsync<br>fsync 需要把日志记录写回到磁盘后才能返回，时间较长<br>write操作只需要写内容到缓冲区,   就可以返回</p><p>Always 是同步写回,  需要确保日志写回到磁盘.  这个策略会阻塞主线程<br>Everysec 是每隔一秒将日志写入磁盘,   这个操作可以异步执行<br>No 写回策略.  是由操作系统决定将缓冲区内容写回磁盘,   这个操作也可以异步执行.</p><img src="../AOF/2.webp" width="55%" height="55%" /><h4 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a>AOF重写</h4><p>随着命令执行次数的增加,  AOF日志文件会越来越大.<br>AOF日志是命令追加,   可以对AOF命令内容进行精简.  减少AOF日志大小</p><p>AOF是由后台子进程执行操作.<br>主线程仍然将命令写入到AOF文件内容缓冲区,<br>后台子进程会对原来的AOF文件进行数据拷贝,   同时也会将命令写入到AOF重写文件的内容缓冲区.<br>等后台子进程操作完成,   重写日志记录的这些最新操作也会写入新的 AOF 文件<br>此时,   就可以用新的AOF文件代替旧的AOF文件</p><p>后台子进程采用写实复制的功能.  写实复制值的是子进程跟主进程指向相同的内存地址空间,<br>只有当用户对key进行修改时,   主进程就会拷贝这个key对应的内存数据出来,  申请新的内存空间,   然后在上面进行数据修改,  这样就不会影响到原来的数据<br>写实复制:  fork子进程一瞬间是会阻塞主线程的,   文件重写过程中,   用户的对key值修改的越多,  需要申请内存空间,   申请内存空间越长,   也会产生阻塞风险. </p><img src="../AOF/3.webp" width="55%" height="55%" />]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Redis单线程阻塞点</title>
+    <link href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/"/>
+    <url>/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Redis单线程阻塞点"><a href="#Redis单线程阻塞点" class="headerlink" title="Redis单线程阻塞点"></a>Redis单线程阻塞点</h1><ul><li>集合的全量查询以及聚合查询.  比如, 复杂度高O(n)的命令查询,  集合的交, 并, 差操作. </li><li>元素的删除操作.  删除的本质是要释放内存空间,   操作系统在释放内存空间时,  需要把释放的内存空间放回一个空闲内存快的链表.  这个操作,  会阻塞应用程序.  对于大key的删除,   需要特别注意</li><li>磁盘的交互操作.   比如AOF日志同步写.    取决于AOF的写回策略.  Always,   同步写回: 每个写命令执行完，立马同步地将日志写回磁盘.  这个写回策略会影响Redis主线程</li><li>RDB文件的加载.   RDB文件的传输跟接受是使用子进程.  但是从库在接受到RDB后,  需要使用FLUSHDB操作.  FLUSHDB操作会阻塞线程</li><li>切片集群的交互.  对于redis cluster集群来说,  切片间哈希槽信息需要在不同切片进行信息交互.  当需要进行负载均衡或者有实例增删时，数据会在不同的实例间进行迁移</li></ul><h3 id="redis懒删除"><a href="#redis懒删除" class="headerlink" title="redis懒删除"></a>redis懒删除</h3><ul><li>lazy-free是4.0新增的功能，但是默认是关闭的，需要手动开启<blockquote><ul><li>手动开启lazy-free时，有4个选项可以控制，分别对应不同场景下，要不要开启异步释放内存机制：</li><li>lazyfree-lazy-expire：key在过期删除时尝试异步释放内存</li><li>lazyfree-lazy-eviction：内存达到maxmemory并设置了淘汰策略时尝试异步释放内存</li><li>lazyfree-lazy-server-del：执行RENAME&#x2F;MOVE等命令或需要覆盖一个key时，删除旧key尝试异步释放内存</li><li>replica-lazy-flush：主从全量同步，从库清空数据库时异步释放内存</li></ul></blockquote></li></ul><h3 id="redis过期key删除"><a href="#redis过期key删除" class="headerlink" title="redis过期key删除"></a>redis过期key删除</h3><p>默认情况下,  redis会每隔200毫秒删除一些过期key.  这个删除操作会阻塞主线程,  从4.0版本开始,  可以设置异步删除<br>删除算法如下:</p><ol><li>采样ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_LOOP 个数的 key，并将其中过期的 key 全部删除.   ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_LOOP默认个数为20.</li><li>如果超过 25% 的key过期了，则重复删除的过程，直到过期 key的比例降至 25% 以下<br>如果对大量的key设置了相同的过期时间,   这个算法,  有可能导致一直阻塞主线程</li></ol>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Redis集合统计模式</title>
     <link href="/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     <url>/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>

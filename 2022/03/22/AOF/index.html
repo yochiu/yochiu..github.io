@@ -16,20 +16,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Redis集合统计模式 Redis集合类型常见的统计模式有四种,  分别是聚合统计, 排序统计,  二值状态统计,  基数统计  聚合统计聚合统计，就是指统计多个集合元素的聚合结果，包括：统计多个集合的共有元素（交集统计）；把两个集合相比，统计其中一个集合独有的元素（差集统计）；统计多个集合的所有元素比较常见的例子是统计网站新增的用户数,   每天的留存用户数使用一个集合记录所有登陆过的用户.">
+    <meta name="description" content="AOF  数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志   AOF记录的内容  数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令 AOF日志内容有三个部分,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis集合统计模式">
-<meta property="og:url" content="http://example.com/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="AOF">
+<meta property="og:url" content="http://example.com/2022/03/22/AOF/index.html">
 <meta property="og:site_name" content="yochiu">
-<meta property="og:description" content="Redis集合统计模式 Redis集合类型常见的统计模式有四种,  分别是聚合统计, 排序统计,  二值状态统计,  基数统计  聚合统计聚合统计，就是指统计多个集合元素的聚合结果，包括：统计多个集合的共有元素（交集统计）；把两个集合相比，统计其中一个集合独有的元素（差集统计）；统计多个集合的所有元素比较常见的例子是统计网站新增的用户数,   每天的留存用户数使用一个集合记录所有登陆过的用户.">
+<meta property="og:description" content="AOF  数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志   AOF记录的内容  数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令 AOF日志内容有三个部分,">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-14T15:10:00.000Z">
-<meta property="article:modified_time" content="2022-03-14T15:06:26.366Z">
+<meta property="og:image" content="http://example.com/2022/03/22/AOF/0.webp">
+<meta property="og:image" content="http://example.com/2022/03/22/AOF/1.webp">
+<meta property="og:image" content="http://example.com/2022/03/22/AOF/2.webp">
+<meta property="og:image" content="http://example.com/2022/03/22/AOF/3.webp">
+<meta property="article:published_time" content="2022-03-22T13:12:00.000Z">
+<meta property="article:modified_time" content="2022-03-22T13:18:05.202Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/03/22/AOF/0.webp">
   
   
-  <title>Redis集合统计模式 - yochiu</title>
+  <title>AOF - yochiu</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -175,7 +180,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Redis集合统计模式">
+            <span class="h2" id="subtitle" title="AOF">
               
             </span>
 
@@ -185,8 +190,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-14 23:10" pubdate>
-        2022年3月14日 晚上
+      <time datetime="2022-03-22 21:12" pubdate>
+        2022年3月22日 晚上
       </time>
     </span>
   
@@ -196,7 +201,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      924 字
+      1k 字
     </span>
   
 
@@ -205,7 +210,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8 分钟
+      9 分钟
     </span>
   
 
@@ -234,16 +239,42 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Redis集合统计模式</h1>
+            <h1 style="display: none">AOF</h1>
             
             <div class="markdown-body">
-              <h1 id="Redis集合统计模式"><a href="#Redis集合统计模式" class="headerlink" title="Redis集合统计模式"></a>Redis集合统计模式</h1><blockquote>
-<p>Redis集合类型常见的统计模式有四种,  分别是聚合统计, 排序统计,  二值状态统计,  基数统计</p>
+              <h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><blockquote>
+<ul>
+<li>数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志</li>
+</ul>
 </blockquote>
-<h3 id="聚合统计"><a href="#聚合统计" class="headerlink" title="聚合统计"></a>聚合统计</h3><p>聚合统计，就是指统计多个集合元素的聚合结果，包括：统计多个集合的共有元素（交集统计）；把两个集合相比，统计其中一个集合独有的元素（差集统计）；统计多个集合的所有元素<br>比较常见的例子是统计网站新增的用户数,   每天的留存用户数<br>使用一个集合记录所有登陆过的用户.  Set类型,  key值为:  user:id<br>对于每天登陆的用户,  也使用Set类型记录,  key值形式为:  user:id:20220314<br>新增用户:  SDIFFSTORE  user:new user:id:20220314 user:id<br>留存用户: SINTERSTORE user:id:rem user:id:20220314 user:id:20220313</p>
-<h3 id="排序统计"><a href="#排序统计" class="headerlink" title="排序统计"></a>排序统计</h3><p>比较经典的例子是网站的评论数<br>redis中有序的数据结构有List,  Sort Set<br>使用List会导致相同位置上的元素发生变动<br>Sorted Set 就不存在这个问题，因为它是根据元素的实际权重来排序和获取数据的<br>可以从评论时间的先后给每条评论设置一个权重值,  保存在Sort Set中</p>
-<h3 id="二值状态统计"><a href="#二值状态统计" class="headerlink" title="二值状态统计"></a>二值状态统计</h3><p>这里的二值状态就是指集合元素的取值就只有 0 和 1 两种。<br>比较经典的应用场景是打卡场景,  记录签到（1）或未签到（0）<br>Redis提供了一个扩展的数据类型Bitmap,  可以按照偏移值offset对bit数组的某一个 bit 位进行读和写.<br>记录签到:  setbit  key  offset 1<br>检测是否签到:  getbit key  offset<br>统计签到:  bitcount key </p>
-<h3 id="基数统计"><a href="#基数统计" class="headerlink" title="基数统计"></a>基数统计</h3><p>基数统计就是指统计一个集合中不重复的元素个数<br>统计网页的UV时,  就需要用到基数统计<br>基数统计在Redis里可以使用Set或者Hash的数据结构<br>但数据很多时,  Set跟Hash会占用比较大的数据结构<br>HyperLogLog 是一种用于统计基数的数据集合类型，它的最大优势就在于，当集合元素数量非常多时，它计算基数所需的空间总是固定的，而且还很小<br>每个 HyperLogLog 只需要花费 12 KB 内存，就可以计算接近 2^64 个元素的基数<br>HyperLogLog 的统计规则是基于概率完成的，所以它给出的统计结果是有一定误差的</p>
+<h4 id="AOF记录的内容"><a href="#AOF记录的内容" class="headerlink" title="AOF记录的内容"></a>AOF记录的内容</h4><blockquote>
+<ul>
+<li>数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令</li>
+<li>AOF日志内容有三个部分,   每部分都是由”$”+数字开头,  后面紧跟着具体的命令、键或值.</li>
+<li>如下图所示,  这个 “*3”表示当前命令有三个部分，这里$表示有多少个字节</li>
+</ul>
+</blockquote>
+<img src="../AOF/0.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+
+
+<h4 id="AOF三种策略"><a href="#AOF三种策略" class="headerlink" title="AOF三种策略"></a>AOF三种策略</h4><p>AOF一共有三种策略,  分别是no,  every sec,  always三种策略.</p>
+<ul>
+<li>No 操作系统控制的写回.  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，  由操作系统决定何时将缓冲区内容写回磁盘。</li>
+<li>Everysec  每秒写回,  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘</li>
+<li>Always  同步写回：每个写命令执行完，立马同步地将日志写回磁盘</li>
+</ul>
+<img src="../AOF/1.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+
+<p>日志写到内存缓冲区对应的是write操作,  日志写回到磁盘对应的是fsync<br>fsync 需要把日志记录写回到磁盘后才能返回，时间较长<br>write操作只需要写内容到缓冲区,   就可以返回</p>
+<p>Always 是同步写回,  需要确保日志写回到磁盘.  这个策略会阻塞主线程<br>Everysec 是每隔一秒将日志写入磁盘,   这个操作可以异步执行<br>No 写回策略.  是由操作系统决定将缓冲区内容写回磁盘,   这个操作也可以异步执行.</p>
+<img src="../AOF/2.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+
+
+<h4 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a>AOF重写</h4><p>随着命令执行次数的增加,  AOF日志文件会越来越大.<br>AOF日志是命令追加,   可以对AOF命令内容进行精简.  减少AOF日志大小</p>
+<p>AOF是由后台子进程执行操作.<br>主线程仍然将命令写入到AOF文件内容缓冲区,<br>后台子进程会对原来的AOF文件进行数据拷贝,   同时也会将命令写入到AOF重写文件的内容缓冲区.<br>等后台子进程操作完成,   重写日志记录的这些最新操作也会写入新的 AOF 文件<br>此时,   就可以用新的AOF文件代替旧的AOF文件</p>
+<p>后台子进程采用写实复制的功能.  写实复制值的是子进程跟主进程指向相同的内存地址空间,<br>只有当用户对key进行修改时,   主进程就会拷贝这个key对应的内存数据出来,  申请新的内存空间,   然后在上面进行数据修改,  这样就不会影响到原来的数据<br>写实复制:  fork子进程一瞬间是会阻塞主线程的,   文件重写过程中,   用户的对key值修改的越多,  需要申请内存空间,   申请内存空间越长,   也会产生阻塞风险. </p>
+<img src="../AOF/3.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
+
 
             </div>
             <hr>
@@ -264,18 +295,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Redis单线程阻塞点</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/03/14/maven_java/">
-                        <span class="hidden-mobile">maven跟java版本不匹配</span>
+                      <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/">
+                        <span class="hidden-mobile">Redis单线程阻塞点</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -193,6 +193,72 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/03/22/AOF/" target="_self">
+          AOF
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/03/22/AOF/" target="_self">
+          
+          AOF  数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志   AOF记录的内容  数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令 AOF日志内容有三个部分,
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-22 21:12" pubdate>
+              2022-03-22
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/" target="_self">
+          Redis单线程阻塞点
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/" target="_self">
+          
+          Redis单线程阻塞点 集合的全量查询以及聚合查询.  比如, 复杂度高O(n)的命令查询,  集合的交, 并, 差操作.  元素的删除操作.  删除的本质是要释放内存空间,   操作系统在释放内存空间时,  需要把释放的内存空间放回一个空闲内存快的链表.  这个操作,  会阻塞应用程序.  对于大key的删除,   需要特别注意 磁盘的交互操作.   比如AOF日志同步写.    取决于AOF的
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-21 00:00" pubdate>
+              2022-03-21
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
           Redis集合统计模式
         </a>

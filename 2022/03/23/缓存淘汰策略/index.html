@@ -16,25 +16,20 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="AOF  数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志   AOF记录的内容  数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令 AOF日志内容有三个部分,">
+    <meta name="description" content="Redis缓存淘汰策略 noeviction:  不进行数据淘汰 volatile-ttl 在筛选时，会针对设置了过期时间的键值对，根据过期时间的先后进行删除，越早过期的越先被删除。 volatile-random 就像它的名称一样，在设置了过期时间的键值对中，进行随机删除。- volatile-lru 会使用 LRU 算法筛选设置了过期时间的键值对。volatile-lfu 会使用 LFU 算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AOF">
-<meta property="og:url" content="http://example.com/2022/03/22/AOF/index.html">
+<meta property="og:title" content="缓存淘汰策略">
+<meta property="og:url" content="http://example.com/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/index.html">
 <meta property="og:site_name" content="yochiu">
-<meta property="og:description" content="AOF  数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志   AOF记录的内容  数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令 AOF日志内容有三个部分,">
+<meta property="og:description" content="Redis缓存淘汰策略 noeviction:  不进行数据淘汰 volatile-ttl 在筛选时，会针对设置了过期时间的键值对，根据过期时间的先后进行删除，越早过期的越先被删除。 volatile-random 就像它的名称一样，在设置了过期时间的键值对中，进行随机删除。- volatile-lru 会使用 LRU 算法筛选设置了过期时间的键值对。volatile-lfu 会使用 LFU 算法">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/22/AOF/0.webp">
-<meta property="og:image" content="http://example.com/2022/03/22/AOF/1.webp">
-<meta property="og:image" content="http://example.com/2022/03/22/AOF/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/22/AOF/3.webp">
-<meta property="article:published_time" content="2022-03-22T13:12:00.000Z">
-<meta property="article:modified_time" content="2022-03-22T13:18:05.202Z">
+<meta property="article:published_time" content="2022-03-23T13:42:00.000Z">
+<meta property="article:modified_time" content="2022-03-24T13:37:45.161Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/03/22/AOF/0.webp">
   
   
-  <title>AOF - yochiu</title>
+  <title>缓存淘汰策略 - yochiu</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -180,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="AOF">
+            <span class="h2" id="subtitle" title="缓存淘汰策略">
               
             </span>
 
@@ -190,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-22 21:12" pubdate>
-        2022年3月22日 晚上
+      <time datetime="2022-03-23 21:42" pubdate>
+        2022年3月23日 晚上
       </time>
     </span>
   
@@ -201,7 +196,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.5k 字
     </span>
   
 
@@ -210,7 +205,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9 分钟
+      13 分钟
     </span>
   
 
@@ -239,42 +234,38 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">AOF</h1>
+            <h1 style="display: none">缓存淘汰策略</h1>
             
             <div class="markdown-body">
-              <h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><blockquote>
-<ul>
-<li>数据库的写前日志（Write Ahead Log, WAL),   是先把修改的数据记到日志文件中，以便故障时进行恢复。不过，AOF 日志正好相反，它是写后日志，“写后”的意思是 Redis 是先执行命令，把数据写入内存，然后才记录日志</li>
+              <h3 id="Redis缓存淘汰策略"><a href="#Redis缓存淘汰策略" class="headerlink" title="Redis缓存淘汰策略"></a>Redis缓存淘汰策略</h3><ul>
+<li>noeviction:  不进行数据淘汰</li>
+<li>volatile-ttl 在筛选时，会针对设置了过期时间的键值对，根据过期时间的先后进行删除，越早过期的越先被删除。</li>
+<li>volatile-random 就像它的名称一样，在设置了过期时间的键值对中，进行随机删除。-</li>
+<li>volatile-lru 会使用 LRU 算法筛选设置了过期时间的键值对。volatile-lfu 会使用 LFU 算法选择设置了过期时间的键值对</li>
+<li>allkeys-random 策略，从所有键值对中随机选择并删除数据</li>
+<li>allkeys-lru 策略，使用 LRU 算法在所有数据中进行筛选</li>
+<li>allkeys-lfu 策略，使用 LFU 算法在所有数据中进行筛选</li>
 </ul>
-</blockquote>
-<h4 id="AOF记录的内容"><a href="#AOF记录的内容" class="headerlink" title="AOF记录的内容"></a>AOF记录的内容</h4><blockquote>
+<h3 id="LRU算法"><a href="#LRU算法" class="headerlink" title="LRU算法"></a>LRU算法</h3><p>LRU 算法的全称是Least Recently Used<br>按照最近最少使用的原则来筛选数据，最不常用的数据会被筛选出来，而最近频繁使用的数据会留在缓存中<br>LUR普遍做法是维护一个链表,   链表的头和尾分别表示 MRU 端和 LRU 端，分别代表最近最常使用的数据和最近最不常用的数据<br>对于访问到的数据,   移动到队头.   当链表元素满了,   淘汰队尾的数据</p>
+<p>redis LRu算法不使用链表做法,   而是在RedisObject中维护了一个数据最近访问的时间戳.<br>Redis 在淘汰的数据时，第一次会随机选出 N 个数据，把它们作为一个候选集合<br>接下来，Redis 会比较这 N 个数据的 lru 字段，把 lru 字段值最小的数据从缓存中淘汰出去<br>下一次淘汰数据时,   Redis会进行数据挑选.  挑选的数据的lru字段要小于候选集合中最小的 lru 值.<br>当候选数据集中的数据个数达到了 maxmemory-samples，Redis 就把候选数据集中 lru字段值最小的数据淘汰出去 . </p>
+<h3 id="LFU算法"><a href="#LFU算法" class="headerlink" title="LFU算法"></a>LFU算法</h3><p>LFU 缓存策略是为每个数据增加了一个计数器，来统计这个数据的访问次数。<br>当使用 LFU 策略筛选淘汰数据时，会根据数据的访问次数进行筛选，把访问次数最低的数据淘汰出缓存。<br>如果两个数据的访问次数相同，LFU 策略再比较这两个数据的访问时效性，把距离上一次访问时间更久的数据淘汰出缓存</p>
+<p>Redis 在实现 LFU 策略的时候，只是把原来 24bit 大小的 lru 字段，又进一步拆分成了两部分。</p>
 <ul>
-<li>数据库的redo log(重做日志),  记录的是修改后的数据.   AOF记录的是数据的执行命令</li>
-<li>AOF日志内容有三个部分,   每部分都是由”$”+数字开头,  后面紧跟着具体的命令、键或值.</li>
-<li>如下图所示,  这个 “*3”表示当前命令有三个部分，这里$表示有多少个字节</li>
+<li>ldt 值：lru 字段的前 16bit，表示数据的访问时间戳；</li>
+<li>counter 值：lru 字段的后 8bit，表示数据的访问次数</li>
 </ul>
-</blockquote>
-<img src="../AOF/0.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
-
-<h4 id="AOF三种策略"><a href="#AOF三种策略" class="headerlink" title="AOF三种策略"></a>AOF三种策略</h4><p>AOF一共有三种策略,  分别是no,  every sec,  always三种策略.</p>
+<p>8bit只能保存最多255次.  redis采用了算法来计算counter值</p>
 <ul>
-<li>No 操作系统控制的写回.  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，  由操作系统决定何时将缓冲区内容写回磁盘。</li>
-<li>Everysec  每秒写回,  每个写命令执行完，只是先把日志写到 AOF 文件的内存缓冲区，每隔一秒把缓冲区中的内容写入磁盘</li>
-<li>Always  同步写回：每个写命令执行完，立马同步地将日志写回磁盘</li>
+<li>每当数据被访问一次时，首先，用计数器当前的值乘以配置项 lfu_log_factor 再加 1，再取其倒数，得到一个 p 值</li>
+<li>然后，把这个 p 值和一个取值范围在（0，1）间的随机数 r 值比大小，只有 p 值大于 r 值时，计数器才加 1</li>
 </ul>
-<img src="../AOF/1.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
-<p>日志写到内存缓冲区对应的是write操作,  日志写回到磁盘对应的是fsync<br>fsync 需要把日志记录写回到磁盘后才能返回，时间较长<br>write操作只需要写内容到缓冲区,   就可以返回</p>
-<p>Always 是同步写回,  需要确保日志写回到磁盘.  这个策略会阻塞主线程<br>Everysec 是每隔一秒将日志写入磁盘,   这个操作可以异步执行<br>No 写回策略.  是由操作系统决定将缓冲区内容写回磁盘,   这个操作也可以异步执行.</p>
-<img src="../AOF/2.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
-
-<h4 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a>AOF重写</h4><p>随着命令执行次数的增加,  AOF日志文件会越来越大.<br>AOF日志是命令追加,   可以对AOF命令内容进行精简.  减少AOF日志大小</p>
-<p>AOF是由后台子进程执行操作.<br>主线程仍然将命令写入到AOF文件内容缓冲区,<br>后台子进程会对原来的AOF文件进行数据拷贝,   同时也会将命令写入到AOF重写文件的内容缓冲区.<br>等后台子进程操作完成,   重写日志记录的这些最新操作也会写入新的 AOF 文件<br>此时,   就可以用新的AOF文件代替旧的AOF文件</p>
-<p>后台子进程采用写实复制的功能.  写实复制值的是子进程跟主进程指向相同的内存地址空间,<br>只有当用户对key进行修改时,   主进程就会拷贝这个key对应的内存数据出来,  申请新的内存空间,   然后在上面进行数据修改,  这样就不会影响到原来的数据<br>写实复制:  fork子进程一瞬间是会阻塞主线程的,   文件重写过程中,   用户的对key值修改的越多,  需要申请内存空间,   申请内存空间越长,   也会产生阻塞风险. </p>
-<img src="../AOF/3.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" />
-
+<p>counter值的衰减机制</p>
+<ul>
+<li>LFU 策略使用衰减因子配置项 lfu_decay_time 来控制访问次数的衰减</li>
+<li>LFU 策略会计算当前时间和数据最近一次访问时间的差值，并把这个差值换算成以分钟为单位</li>
+<li>LFU 策略再把这个差值除以 lfu_decay_time 值，所得的结果就是数据 counter 要衰减的值</li>
+</ul>
+<h3 id="异步删除"><a href="#异步删除" class="headerlink" title="异步删除"></a>异步删除</h3><p>1、lazy-free是4.0新增的功能，但是默认是关闭的，需要手动开启。<br>2、手动开启lazy-free时，有4个选项可以控制，分别对应不同场景下，要不要开启异步释放内存机制：<br>a) lazyfree-lazy-expire：key在过期删除时尝试异步释放内存<br>b) lazyfree-lazy-eviction：内存达到maxmemory并设置了淘汰策略时尝试异步释放内存<br>c) lazyfree-lazy-server-del：执行RENAME&#x2F;MOVE等命令或需要覆盖一个key时，删除旧key尝试异步释放内存<br>d) replica-lazy-flush：主从全量同步，从库清空数据库时异步释放内存</p>
 
             </div>
             <hr>
@@ -295,9 +286,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/">
+                      <a href="/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">缓存淘汰策略</span>
+                        <span class="hidden-mobile">Redis缓冲区</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -305,8 +296,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/">
-                        <span class="hidden-mobile">Redis单线程阻塞点</span>
+                      <a href="/2022/03/22/AOF/">
+                        <span class="hidden-mobile">AOF</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

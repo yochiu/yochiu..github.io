@@ -4,6 +4,32 @@
   
   
   <entry>
+    <title>Redis缓冲区</title>
+    <link href="/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/"/>
+    <url>/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Redis缓冲区"><a href="#Redis缓冲区" class="headerlink" title="Redis缓冲区"></a>Redis缓冲区</h3><h5 id="客户端输入输出缓冲区"><a href="#客户端输入输出缓冲区" class="headerlink" title="客户端输入输出缓冲区"></a>客户端输入输出缓冲区</h5><p>服务器端给每个连接的客户端都设置了一个输入缓冲区和输出缓冲区</p><p>输入缓冲区会先把客户端发送过来的命令暂存起来，Redis 主线程再从输入缓冲区中读取命令，进行处理.<br>当 Redis 主线程处理完数据后，会把结果写入到输出缓冲区，再通过输出缓冲区返回给客户端</p><p>输入输出缓冲区溢出情况</p><ul><li>bigKey的操作</li><li>服务端处理请求操作,  例如发生主线程阻塞情况</li></ul><p>Redis客户端输入缓冲区上线阈值为1GB,   无法进行调整<br>Redis输出缓冲区可以通过client-output-buffer-limit参数进行调整.<br>Redis 输出缓冲区包括两部分：一部分，是一个大小为 16KB 的固定缓冲空间，用来暂存 OK 响应和出错信息；另一部分，是一个可以动态增加的缓冲空间，用来暂存大小可变的响应结果</p><h4 id="主从集群全量复制缓冲区"><a href="#主从集群全量复制缓冲区" class="headerlink" title="主从集群全量复制缓冲区"></a>主从集群全量复制缓冲区</h4><p>主从全量数据同步时,   主节点会为每个从节点维护一个复制缓冲区,<br>主节点在向从节点传输 RDB 文件的同时，会继续接收客户端发送的写命令请求, 这些写命令就会先保存在复制缓冲区中</p><h4 id="主从增量复制缓冲区"><a href="#主从增量复制缓冲区" class="headerlink" title="主从增量复制缓冲区"></a>主从增量复制缓冲区</h4><p>主从集群增量复制时,  主节点在把接收到的写命令同步给从节点时，同时会把这些写命令写入复制积压缓冲区<br>当从节点跟主节点恢复连接时,  从节点就会从复制积压缓冲区中，读取断连期间主节点接收到的写命令<br>增量复制缓冲区是一个环形缓冲区.  当发生溢出的时候,  会造成命令被覆盖</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>缓存淘汰策略</title>
+    <link href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/"/>
+    <url>/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Redis缓存淘汰策略"><a href="#Redis缓存淘汰策略" class="headerlink" title="Redis缓存淘汰策略"></a>Redis缓存淘汰策略</h3><ul><li>noeviction:  不进行数据淘汰</li><li>volatile-ttl 在筛选时，会针对设置了过期时间的键值对，根据过期时间的先后进行删除，越早过期的越先被删除。</li><li>volatile-random 就像它的名称一样，在设置了过期时间的键值对中，进行随机删除。-</li><li>volatile-lru 会使用 LRU 算法筛选设置了过期时间的键值对。volatile-lfu 会使用 LFU 算法选择设置了过期时间的键值对</li><li>allkeys-random 策略，从所有键值对中随机选择并删除数据</li><li>allkeys-lru 策略，使用 LRU 算法在所有数据中进行筛选</li><li>allkeys-lfu 策略，使用 LFU 算法在所有数据中进行筛选</li></ul><h3 id="LRU算法"><a href="#LRU算法" class="headerlink" title="LRU算法"></a>LRU算法</h3><p>LRU 算法的全称是Least Recently Used<br>按照最近最少使用的原则来筛选数据，最不常用的数据会被筛选出来，而最近频繁使用的数据会留在缓存中<br>LUR普遍做法是维护一个链表,   链表的头和尾分别表示 MRU 端和 LRU 端，分别代表最近最常使用的数据和最近最不常用的数据<br>对于访问到的数据,   移动到队头.   当链表元素满了,   淘汰队尾的数据</p><p>redis LRu算法不使用链表做法,   而是在RedisObject中维护了一个数据最近访问的时间戳.<br>Redis 在淘汰的数据时，第一次会随机选出 N 个数据，把它们作为一个候选集合<br>接下来，Redis 会比较这 N 个数据的 lru 字段，把 lru 字段值最小的数据从缓存中淘汰出去<br>下一次淘汰数据时,   Redis会进行数据挑选.  挑选的数据的lru字段要小于候选集合中最小的 lru 值.<br>当候选数据集中的数据个数达到了 maxmemory-samples，Redis 就把候选数据集中 lru字段值最小的数据淘汰出去 . </p><h3 id="LFU算法"><a href="#LFU算法" class="headerlink" title="LFU算法"></a>LFU算法</h3><p>LFU 缓存策略是为每个数据增加了一个计数器，来统计这个数据的访问次数。<br>当使用 LFU 策略筛选淘汰数据时，会根据数据的访问次数进行筛选，把访问次数最低的数据淘汰出缓存。<br>如果两个数据的访问次数相同，LFU 策略再比较这两个数据的访问时效性，把距离上一次访问时间更久的数据淘汰出缓存</p><p>Redis 在实现 LFU 策略的时候，只是把原来 24bit 大小的 lru 字段，又进一步拆分成了两部分。</p><ul><li>ldt 值：lru 字段的前 16bit，表示数据的访问时间戳；</li><li>counter 值：lru 字段的后 8bit，表示数据的访问次数</li></ul><p>8bit只能保存最多255次.  redis采用了算法来计算counter值</p><ul><li>每当数据被访问一次时，首先，用计数器当前的值乘以配置项 lfu_log_factor 再加 1，再取其倒数，得到一个 p 值</li><li>然后，把这个 p 值和一个取值范围在（0，1）间的随机数 r 值比大小，只有 p 值大于 r 值时，计数器才加 1</li></ul><p>counter值的衰减机制</p><ul><li>LFU 策略使用衰减因子配置项 lfu_decay_time 来控制访问次数的衰减</li><li>LFU 策略会计算当前时间和数据最近一次访问时间的差值，并把这个差值换算成以分钟为单位</li><li>LFU 策略再把这个差值除以 lfu_decay_time 值，所得的结果就是数据 counter 要衰减的值</li></ul><h3 id="异步删除"><a href="#异步删除" class="headerlink" title="异步删除"></a>异步删除</h3><p>1、lazy-free是4.0新增的功能，但是默认是关闭的，需要手动开启。<br>2、手动开启lazy-free时，有4个选项可以控制，分别对应不同场景下，要不要开启异步释放内存机制：<br>a) lazyfree-lazy-expire：key在过期删除时尝试异步释放内存<br>b) lazyfree-lazy-eviction：内存达到maxmemory并设置了淘汰策略时尝试异步释放内存<br>c) lazyfree-lazy-server-del：执行RENAME&#x2F;MOVE等命令或需要覆盖一个key时，删除旧key尝试异步释放内存<br>d) replica-lazy-flush：主从全量同步，从库清空数据库时异步释放内存</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>AOF</title>
     <link href="/2022/03/22/AOF/"/>
     <url>/2022/03/22/AOF/</url>

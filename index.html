@@ -193,6 +193,72 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/" target="_self">
+          Redis缓冲区
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/" target="_self">
+          
+          Redis缓冲区客户端输入输出缓冲区服务器端给每个连接的客户端都设置了一个输入缓冲区和输出缓冲区 输入缓冲区会先把客户端发送过来的命令暂存起来，Redis 主线程再从输入缓冲区中读取命令，进行处理.当 Redis 主线程处理完数据后，会把结果写入到输出缓冲区，再通过输出缓冲区返回给客户端 输入输出缓冲区溢出情况  bigKey的操作 服务端处理请求操作,  例如发生主线程阻塞情况  Redis客户
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-23 21:42" pubdate>
+              2022-03-23
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" target="_self">
+          缓存淘汰策略
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" target="_self">
+          
+          Redis缓存淘汰策略 noeviction:  不进行数据淘汰 volatile-ttl 在筛选时，会针对设置了过期时间的键值对，根据过期时间的先后进行删除，越早过期的越先被删除。 volatile-random 就像它的名称一样，在设置了过期时间的键值对中，进行随机删除。- volatile-lru 会使用 LRU 算法筛选设置了过期时间的键值对。volatile-lfu 会使用 LFU 算法
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-23 21:42" pubdate>
+              2022-03-23
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/03/22/AOF/" target="_self">
           AOF
         </a>

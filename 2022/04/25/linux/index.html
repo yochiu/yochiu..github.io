@@ -23,14 +23,14 @@
 <meta property="og:site_name" content="yochiu">
 <meta property="og:description" content="linux性能优化平均负载平均负载指的是当前系统下,  系统中的可运行还有不可中断的平均进程数,  也就是平均活跃进程数.  跟CPU使用率没有直接关系  可运行的进程:  是指正在使用 CPU 或者正在等待 CPU 的进程,   也就是我们常用 ps 命令看到的,  处于 R 状态（Running 或 Runnable）的进程 不可中断平均进程:   正处于内核态关键流程中的进程,  并且这些流">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/04/25/linux/1.webp">
-<meta property="og:image" content="http://example.com/2022/04/25/linux/2.webp">
+<meta property="og:image" content="http://example.com/2022/04/25/linux/1.png">
+<meta property="og:image" content="http://example.com/2022/04/25/linux/2.png">
 <meta property="og:image" content="http://example.com/2022/04/25/linux/3.png">
 <meta property="article:published_time" content="2022-04-25T13:12:00.000Z">
-<meta property="article:modified_time" content="2022-05-08T07:05:32.633Z">
+<meta property="article:modified_time" content="2022-05-08T07:14:48.985Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/04/25/linux/1.webp">
+<meta name="twitter:image" content="http://example.com/2022/04/25/linux/1.png">
   
   
   <title>linux性能优化 - yochiu</title>
@@ -255,8 +255,8 @@
 <h4 id="平均负载命令"><a href="#平均负载命令" class="headerlink" title="平均负载命令"></a>平均负载命令</h4><ul>
 <li>uptime:  查看当前系统负载情况</li>
 <li>cat &#x2F;proc&#x2F;cpuinfo:  查看系统的CPU数量,  平均负载指的是逻辑核数<br>总核数 &#x3D; 物理CPU个数 × 每颗物理CPU的核数<br>总逻辑CPU数 &#x3D; 物理CPU个数 × 每颗物理CPU的核数 × 超线程数<br>物理CPU个数指的是: cat &#x2F;proc&#x2F;cpuinfo 来查看,  其中的physical id就是每个物理CPU的ID, 能找到几个physical id就代表计算机实际有几个CPU<br>逻辑CPU个数:  cat &#x2F;proc&#x2F;cpuinfo 来查看,  其中的core 指的就是核心数</li>
-<li>mpstat -P ALL 5 1:  显示所有CPU的指标，并在间隔5秒输出一组数据<img src="../linux/1.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" /></li>
-<li>pidstat -u 5 1:  间隔5秒后输出一组数据，-u表示CPU指标,  查看的是进程CPU状态<img src="../linux/2.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" /></li>
+<li>mpstat -P ALL 5 1:  显示所有CPU的指标，并在间隔5秒输出一组数据<img src="../linux/1.png" srcset="/img/loading.gif" lazyload width="55%" height="55%" /></li>
+<li>pidstat -u 5 1:  间隔5秒后输出一组数据，-u表示CPU指标,  查看的是进程CPU状态<img src="../linux/2.png" srcset="/img/loading.gif" lazyload width="55%" height="55%" /></li>
 </ul>
 <h4 id="CPU上下文切换过程"><a href="#CPU上下文切换过程" class="headerlink" title="CPU上下文切换过程"></a>CPU上下文切换过程</h4><p>切换任务的时候,  需要记录任务当前的状态和获取下一任务的信息和地址(指针), 这就是上下文的内容。<br>上下文是指某一时间点CPU寄存器和程序计数器的内容,  广义上还包括内存中进程的虚拟地址映射信息.<br>上下文切换的过程：<br>(1)记录当前任务的上下文(即寄存器和计算器等所有的状态)<br>(2)找到新任务的上下文并加载<br>(3)切换到新任务的程序计算器位置,  恢复其任务</p>
 <h4 id="CPU上下文切换场景"><a href="#CPU上下文切换场景" class="headerlink" title="CPU上下文切换场景"></a>CPU上下文切换场景</h4><ul>

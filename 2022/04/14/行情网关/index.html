@@ -16,20 +16,22 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Redis缓冲区客户端输入输出缓冲区服务器端给每个连接的客户端都设置了一个输入缓冲区和输出缓冲区 输入缓冲区会先把客户端发送过来的命令暂存起来，Redis 主线程再从输入缓冲区中读取命令，进行处理.当 Redis 主线程处理完数据后，会把结果写入到输出缓冲区，再通过输出缓冲区返回给客户端 输入输出缓冲区溢出情况  bigKey的操作 服务端处理请求操作,  例如发生主线程阻塞情况  Redis客户">
+    <meta name="description" content="网关功能 作为入口网关,  为客户端提供一个接入地址,   API网关将用户的请求路由到不同的行情业务服务器上 提供了服务治理功能,   支持行情服务的降级,   以及流量控制  服务监控的完善,  监控数据上报到n9e  性能 RPC框架:  Dubbo (2.6.7的版本) RPC请求时长.  超时控制业务方调用超时时长为100毫秒 IO模型  (IO多路复用)  服务降级降级是为了保证核心服">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis缓冲区">
-<meta property="og:url" content="http://example.com/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/index.html">
+<meta property="og:title" content="yochiu">
+<meta property="og:url" content="http://example.com/2022/04/14/%E8%A1%8C%E6%83%85%E7%BD%91%E5%85%B3/index.html">
 <meta property="og:site_name" content="yochiu">
-<meta property="og:description" content="Redis缓冲区客户端输入输出缓冲区服务器端给每个连接的客户端都设置了一个输入缓冲区和输出缓冲区 输入缓冲区会先把客户端发送过来的命令暂存起来，Redis 主线程再从输入缓冲区中读取命令，进行处理.当 Redis 主线程处理完数据后，会把结果写入到输出缓冲区，再通过输出缓冲区返回给客户端 输入输出缓冲区溢出情况  bigKey的操作 服务端处理请求操作,  例如发生主线程阻塞情况  Redis客户">
+<meta property="og:description" content="网关功能 作为入口网关,  为客户端提供一个接入地址,   API网关将用户的请求路由到不同的行情业务服务器上 提供了服务治理功能,   支持行情服务的降级,   以及流量控制  服务监控的完善,  监控数据上报到n9e  性能 RPC框架:  Dubbo (2.6.7的版本) RPC请求时长.  超时控制业务方调用超时时长为100毫秒 IO模型  (IO多路复用)  服务降级降级是为了保证核心服">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-23T13:42:00.000Z">
-<meta property="article:modified_time" content="2022-03-23T13:44:45.614Z">
+<meta property="og:image" content="http://example.com/2022/04/14/网关/1.webp">
+<meta property="article:published_time" content="2022-04-14T02:39:00.196Z">
+<meta property="article:modified_time" content="2022-04-14T02:39:00.197Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/04/14/网关/1.webp">
   
   
-  <title>Redis缓冲区 - yochiu</title>
+  <title>yochiu</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -175,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Redis缓冲区">
+            <span class="h2" id="subtitle" title="">
               
             </span>
 
@@ -185,8 +187,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-23 21:42" pubdate>
-        2022年3月23日 晚上
+      <time datetime="2022-04-14 10:39" pubdate>
+        2022年4月14日 上午
       </time>
     </span>
   
@@ -196,7 +198,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      570 字
+      1.6k 字
     </span>
   
 
@@ -205,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5 分钟
+      13 分钟
     </span>
   
 
@@ -234,19 +236,48 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Redis缓冲区</h1>
+            <h1 style="display: none"></h1>
             
             <div class="markdown-body">
-              <h3 id="Redis缓冲区"><a href="#Redis缓冲区" class="headerlink" title="Redis缓冲区"></a>Redis缓冲区</h3><h5 id="客户端输入输出缓冲区"><a href="#客户端输入输出缓冲区" class="headerlink" title="客户端输入输出缓冲区"></a>客户端输入输出缓冲区</h5><p>服务器端给每个连接的客户端都设置了一个输入缓冲区和输出缓冲区</p>
-<p>输入缓冲区会先把客户端发送过来的命令暂存起来，Redis 主线程再从输入缓冲区中读取命令，进行处理.<br>当 Redis 主线程处理完数据后，会把结果写入到输出缓冲区，再通过输出缓冲区返回给客户端</p>
-<p>输入输出缓冲区溢出情况</p>
-<ul>
-<li>bigKey的操作</li>
-<li>服务端处理请求操作,  例如发生主线程阻塞情况</li>
+              <h3 id="网关"><a href="#网关" class="headerlink" title="网关"></a>网关</h3><h5 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h5><ul>
+<li>作为入口网关,  为客户端提供一个接入地址,   API网关将用户的请求路由到不同的行情业务服务器上</li>
+<li>提供了服务治理功能,   支持行情服务的降级,   以及流量控制 </li>
+<li>服务监控的完善,  监控数据上报到n9e</li>
 </ul>
-<p>Redis客户端输入缓冲区上线阈值为1GB,   无法进行调整<br>Redis输出缓冲区可以通过client-output-buffer-limit参数进行调整.<br>Redis 输出缓冲区包括两部分：一部分，是一个大小为 16KB 的固定缓冲空间，用来暂存 OK 响应和出错信息；另一部分，是一个可以动态增加的缓冲空间，用来暂存大小可变的响应结果</p>
-<h4 id="主从集群全量复制缓冲区"><a href="#主从集群全量复制缓冲区" class="headerlink" title="主从集群全量复制缓冲区"></a>主从集群全量复制缓冲区</h4><p>主从全量数据同步时,   主节点会为每个从节点维护一个复制缓冲区,<br>主节点在向从节点传输 RDB 文件的同时，会继续接收客户端发送的写命令请求, 这些写命令就会先保存在复制缓冲区中</p>
-<h4 id="主从增量复制缓冲区"><a href="#主从增量复制缓冲区" class="headerlink" title="主从增量复制缓冲区"></a>主从增量复制缓冲区</h4><p>主从集群增量复制时,  主节点在把接收到的写命令同步给从节点时，同时会把这些写命令写入复制积压缓冲区<br>当从节点跟主节点恢复连接时,  从节点就会从复制积压缓冲区中，读取断连期间主节点接收到的写命令<br>增量复制缓冲区是一个环形缓冲区.  当发生溢出的时候,  会造成命令被覆盖</p>
+<h5 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h5><ul>
+<li>RPC框架:  Dubbo (2.6.7的版本)</li>
+<li>RPC请求时长.  超时控制<br>业务方调用超时时长为100毫秒</li>
+<li>IO模型  (IO多路复用)</li>
+</ul>
+<h5 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h5><p>降级是为了保证核心服务的稳定而牺牲非核心服务的做法<br>因为机房单数据源问题,   存在机房数据源单点问题.<br>为了保证交易的核心业务,   将路透数据源冗余一份在网关机房.<br>冗余数据存储在redis中,  只包含最新价等行情数据.  </p>
+<p>接口切换规则可通过配置文件获取,  支持本地配置与远程文件配置.  远程文件配置优先于本地配置. 切换规则包括</p>
+<ul>
+<li>全局切换:  针对所有市场的接口进行切换</li>
+<li>市场切换:  针对某个市场下的所有接口切换</li>
+<li>资源切换:  针对到某个资源(接口)切换</li>
+</ul>
+<h5 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h5><p>使用了哨兵限流方案.  是网关服务的一个过滤器组件,   位于整个过滤器的前端,   请求如果超过了限流,   直接被限流器拒绝.<br>开发中采用了apollo跟哨兵限流整合的方案,   支持动态修改限流规则</p>
+<h6 id="压测"><a href="#压测" class="headerlink" title="压测"></a>压测</h6><p>业务方调用网关服务,  网关服务请求下游服务.<br>核心接口的数据(最新价)是换存在服务的内存中<br>业务方的一次RPC请求,  会有两次网络调用<br>在4C8G的机器上.  RPC压测最好结果为:  900QPS.<br>CPU最高到89%.   平均响应为34毫秒,  tp99为95毫秒</p>
+<h6 id="限流方案"><a href="#限流方案" class="headerlink" title="限流方案"></a>限流方案</h6><ul>
+<li>固定窗口限流<br>时间单位 unit 作为一个时间窗口，每个窗口仅允许限制流量内的请求通过<br>缺点:  一个限流时间单位内,   流量有可能超过设置的流量<img src="../网关/1.webp" srcset="/img/loading.gif" lazyload width="55%" height="55%" /></li>
+<li>滑动窗口限流<br>滑动窗口就是将限流窗口内部切分成一些更小的时间片，然后在时间轴上滑动<br>每次滑动，滑过一个小时间片，就形成一个新的限流窗口，即滑动窗口<br>再在这个滑动窗口上执行固定时间窗口算法</li>
+<li>漏桶限流<br>用户请求先流入到一个特定大小的漏桶中，系统以特定的速率从漏桶中获取请求并处理</li>
+<li>令牌桶限流<br>模拟一个特定大小的桶，然后向桶中以特定的速度放入令牌（token），请求到达后，必须  从桶中取出一个令牌才能继续处理。如果桶中已经没有令牌了，那么当前请求就被限流</li>
+</ul>
+<h5 id="服务监控"><a href="#服务监控" class="headerlink" title="服务监控"></a>服务监控</h5><p>服务监控采用的skywalking链路监控系统.<br>skywalking的QPS监控并不十分精准,   且视图化效果不是很好<br>为了更好监控QPS,   基于dubbo的过滤器二次开发,   数据上报到n9e上</p>
+<h5 id="dubbo"><a href="#dubbo" class="headerlink" title="dubbo"></a>dubbo</h5><h6 id="dubbo事件派发策略"><a href="#dubbo事件派发策略" class="headerlink" title="dubbo事件派发策略"></a>dubbo事件派发策略</h6><ul>
+<li>默认是all：所有消息都派发到线程池，包括请求，响应，连接事件，断开事件，心跳等。 即worker线程接收到事件后，将该事件提交到业务线程池中，自己再去处理其他事。</li>
+<li>direct：worker线程接收到事件后，由worker执行到底。</li>
+<li>message：只有请求响应消息派发到线程池，其它连接断开事件，心跳等消息，直接在 IO线程上执行</li>
+<li>execution：只请求消息派发到线程池，不含响应（客户端线程池），响应和其它连接断开事件，心跳等消息，直接在 IO 线程上执行</li>
+<li>connection：在 IO 线程上，将连接断开事件放入队列，有序逐个执行，其它消息派发到线程池。</li>
+</ul>
+<h6 id="dubbo线程池"><a href="#dubbo线程池" class="headerlink" title="dubbo线程池"></a>dubbo线程池</h6><ul>
+<li>fixed 固定大小线程池，启动时建立线程，不关闭，一直持有(默认)<br> 默认线程数为200,   任务队列使用的是SynchronousQueue.<br> 超过线程数后,  会阻塞</li>
+<li>cached 缓存线程池，空闲一分钟自动删除，需要时重建。<br>limited 可伸缩线程池，但池中的线程数只会增长不会收缩。只增长不收缩的目的是为了避免收缩时突然来了大流量引起的性能问题。</li>
+<li>eager 优先创建Worker线程池。在任务数量大于corePoolSize但是小于maximumPoolSize时，优先创建Worker来处理任务</li>
+</ul>
+<h6 id="调用方式"><a href="#调用方式" class="headerlink" title="调用方式"></a>调用方式</h6><p>支持同步和异步两种调用方式，其中异步调用还可细分为“有返回值”的异步调用和“无返回值”的异步调用</p>
 
             </div>
             <hr>
@@ -267,9 +298,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/27/%E6%91%84%E5%BD%B1%E7%9F%A5%E8%AF%86/">
+                      <a href="/2022/04/25/linux/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">摄影知识</span>
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -277,8 +308,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/">
-                        <span class="hidden-mobile">缓存淘汰策略</span>
+                      <a href="/2022/04/06/mysql/">
+                        <span class="hidden-mobile">MySql</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

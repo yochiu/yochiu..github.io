@@ -18,8 +18,8 @@
   
     <meta name="description" content="yochiu的个人博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="http://example.com/archives/2022/03/index.html">
+<meta property="og:title" content="yochiu">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="yochiu">
 <meta property="og:description" content="yochiu的个人博客">
 <meta property="og:locale" content="zh_CN">
@@ -27,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>归档 - yochiu</title>
+  <title>yochiu</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -57,7 +57,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -158,13 +158,17 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="yochiu的个人博客">
               
             </span>
 
             
           </div>
 
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
           
         </div>
       </div>
@@ -175,72 +179,54 @@
     
       <div class="container nopadding-x-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 11 篇文章</p>
-  <hr>
-  
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2022</p>
     
-    <a href="/2022/03/27/%E6%91%84%E5%BD%B1%E7%9F%A5%E8%AF%86/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">摄影知识</span>
-      <time style="float: right;">03-27</time>
-    </a>
-  
-    
-    <a href="/2022/03/23/Redis%E7%BC%93%E5%86%B2%E5%8C%BA/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Redis缓冲区</span>
-      <time style="float: right;">03-23</time>
-    </a>
-  
-    
-    <a href="/2022/03/23/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">缓存淘汰策略</span>
-      <time style="float: right;">03-23</time>
-    </a>
-  
-    
-    <a href="/2022/03/22/AOF/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">AOF</span>
-      <time style="float: right;">03-22</time>
-    </a>
-  
-    
-    <a href="/2022/03/21/Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E7%82%B9/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Redis单线程阻塞点</span>
-      <time style="float: right;">03-21</time>
-    </a>
-  
-    
-    <a href="/2022/03/14/Redis%E9%9B%86%E5%90%88%E7%BB%9F%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Redis集合统计模式</span>
-      <time style="float: right;">03-14</time>
-    </a>
-  
-    
-    <a href="/2022/03/14/maven_java/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">maven跟java版本不匹配</span>
-      <time style="float: right;">03-14</time>
-    </a>
-  
-    
-    <a href="/2022/03/12/redis_string/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Redis字符串数据结构</span>
-      <time style="float: right;">03-12</time>
-    </a>
-  
-</div>
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/03/12/redis_string/" target="_self">
+          Redis字符串数据结构
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/03/12/redis_string/" target="_self">
+          
+          Redis字符串数据结构 Redis字符串使用了RedisObject跟SDS的数据结构来保存数据.   Redis key_value数据结构Redis使用了全局哈希表来保存所有键值对.  哈希表的每一项是一个 dictEntry 的结构体，用来指向一个键值对.dictEntry 结构中有三个 8 字节的指针, 分别指向 key、value 以及下一个 dictEntry，三个指针共 24 字节
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-12 00:00" pubdate>
+              2022-03-12
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
 
 
 
